@@ -1,0 +1,10 @@
+.app {
+	margin: 0;
+	padding: 0;
+	position: absolute;
+}
+.author {
+	font-style: italic;
+	font-weight: bold;
+}
+/* don't forget to do line through */
