@@ -1,4 +1,8 @@
 const connection = require('../db');
+const bcrypt = require('bcrypt');
+const express = require('express');
+const app = express();
+require('dotenv').config();
 // Express Functions
 const getAllArticles_Express = (req, res) => {
 	res.json(articles);
@@ -129,18 +133,40 @@ const deleteArticleByAuthor = (req, res) => {
 	//   res.json(result);
 	// });
 };
-const logIn = (req, res) => {};
+const logIn = (req, res) => {
+	const { userName } = req.body;
+	const query = `SELECT * FROM users WHERE name ='${userName}'`;
+	connection.query(query, async (err, result) => {
+		if (err) throw err;
+		if (result.length) {
+			password = await bcrypt.compare(req.body.password, result[0].password);
+			if (password) {
+				return res.json('login successfully');
+			} else return res.json('Wrong userName or password');
+		} else return res.json('Wrong userName or password');
+	});
+};
 const signUp = async (req, res) => {
 	const { userName, email, password } = req.body;
 	const hashedPassword = await bcrypt.hash(password, Number(process.env.SALT));
-	const data = [ userName, email, password ];
-	const query = `INSERT INTO users (userName,email,password) VALUES (?,?,?) `;
-	connection.query(query, data, (err, results) => {
-		if (err) {
-			console.log(err);
+	const data = [ userName, email, hashedPassword ];
+	const query = `SELECT * FROM users WHERE name = '${userName}' OR email = '${email}'`;
+	connection.query(query, (err, result) => {
+		if (err) throw err;
+		if (result.length) {
+			if (result[0].email === email) {
+				res.json('This email is already exist..');
+			}
+			if (result[0].name === userName) {
+				res.json('This userName is already exist..');
+			}
+		} else {
+			const query = `INSERT INTO users (name,email,password) VALUES (?,?,?) `;
+			connection.query(query, data, (err, result) => {
+				if (err) throw err;
+			});
+			res.json('Your account has been successfully created.');
 		}
-		console.log(results);
-		res.json(results);
 	});
 };
 //Extra End Points.
@@ -187,5 +213,34 @@ module.exports = {
 	deleteArticleByAuthor,
 	getAllArticlesByAuthor,
 	changeArticleDescriptionById,
-	recoverDeletedArticleByID
+	recoverDeletedArticleByID,
+	signUp,
+	logIn
 };
+/*
+const login = (req,res)=>{
+    const {email}=req.body;
+    const query =`SELECT * FROM users WHERE email ='${email}'`
+    connection.query(query,async(err,result)=>{
+        if(err) throw err;
+        //check if there is user with the request data
+        if(result.length) {
+            password = bcrypt.compare(req.body.password,result[0].password );
+            if(password){
+                const payload = {
+                    id:result[0].id,
+                    role_id:result[0].role_id
+                };
+                const options ={
+                    expiresIn:process.env.TOKEN_EXPIRATION
+                };
+                //putting token to login account
+                token =jwt.sign(payload,process.env.SECRET,options);
+                res.header('x-auth',token).json(token);
+            } else{
+                return res.json("Invalid Email or password..");
+            }
+        }else return res.json("Invalid Email or password..")               
+    });
+};
+*/
