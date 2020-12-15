@@ -169,6 +169,14 @@ const signUp = async (req, res) => {
 		}
 	});
 };
+const searchByTitle = (req, res) => {
+	const { title } = req.body;
+	const query = `SELECT * FROM articles WHERE title = '${title}'`;
+	connection.query(query, (err, result) => {
+		if (err) throw err;
+		res.json(result);
+	});
+};
 //Extra End Points.
 const getAllArticlesByAuthor = (req, res) => {
 	const { author } = req.body;
@@ -215,7 +223,8 @@ module.exports = {
 	changeArticleDescriptionById,
 	recoverDeletedArticleByID,
 	signUp,
-	logIn
+	logIn,
+	searchByTitle
 };
 /*
 const login = (req,res)=>{

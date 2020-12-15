@@ -10,8 +10,9 @@ const {
 	getAllArticlesByAuthor,
 	changeArticleDescriptionById,
 	recoverDeletedArticleByID,
-  signUp,
-  logIn
+	signUp,
+	logIn,
+	searchByTitle
 } = require('../controllers/main-controller');
 
 mainRouter.get('/articles', getAllArticles);
@@ -26,4 +27,5 @@ mainRouter.put('/articlesDescription/:id', changeArticleDescriptionById);
 mainRouter.get('/recoverArticles/:id', recoverDeletedArticleByID);
 mainRouter.post('/signup', signUp);
 mainRouter.post('/login', logIn);
+mainRouter.get('/search', searchByTitle);
 module.exports = mainRouter;
