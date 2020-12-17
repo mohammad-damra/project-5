@@ -12,7 +12,9 @@ const {
 	recoverDeletedArticleByID,
 	signUp,
 	logIn,
-	searchByTitle
+	searchByTitle,
+	getWeather,
+	addFavorite
 } = require('../controllers/main-controller');
 
 mainRouter.get('/articles', getAllArticles);
@@ -28,4 +30,6 @@ mainRouter.get('/recoverArticles/:id', recoverDeletedArticleByID);
 mainRouter.post('/signup', signUp);
 mainRouter.post('/login', logIn);
 mainRouter.get('/search', searchByTitle);
+mainRouter.get('/weather', getWeather);
+mainRouter.post('/favorite', addFavorite);
 module.exports = mainRouter;

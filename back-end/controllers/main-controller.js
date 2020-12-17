@@ -1,6 +1,7 @@
 const connection = require('../db');
 const bcrypt = require('bcrypt');
 const express = require('express');
+const request = require('request');
 const app = express();
 require('dotenv').config();
 // Express Functions
@@ -169,6 +170,21 @@ const signUp = async (req, res) => {
 		}
 	});
 };
+const getWeather = (req, res) => {
+	const weather = 'http://api.openweathermap.org/data/2.5/weather?q=Amman&appid=e668b42ebae93ce84aa0c626e07960d2';
+	request(weather, (error, response, body) => {
+		res.send(body);
+	});
+};
+const addFavorite = (req, res) => {
+	const { userId, articleId } = req.body;
+	const data = [ userId, articleId ];
+	const query = `INSERT INTO favorite (userId,articleId) VALUES (?,?) `;
+	connection.query(query, data, (err, result) => {
+		if (err) throw err;
+		res.json(result);
+	});
+};
 const searchByTitle = (req, res) => {
 	const { title } = req.body;
 	const query = `SELECT * FROM articles WHERE title = '${title}'`;
@@ -224,32 +240,16 @@ module.exports = {
 	recoverDeletedArticleByID,
 	signUp,
 	logIn,
-	searchByTitle
+	searchByTitle,
+	getWeather,
+	addFavorite
 };
-/*
-const login = (req,res)=>{
-    const {email}=req.body;
-    const query =`SELECT * FROM users WHERE email ='${email}'`
-    connection.query(query,async(err,result)=>{
-        if(err) throw err;
-        //check if there is user with the request data
-        if(result.length) {
-            password = bcrypt.compare(req.body.password,result[0].password );
-            if(password){
-                const payload = {
-                    id:result[0].id,
-                    role_id:result[0].role_id
-                };
-                const options ={
-                    expiresIn:process.env.TOKEN_EXPIRATION
-                };
-                //putting token to login account
-                token =jwt.sign(payload,process.env.SECRET,options);
-                res.header('x-auth',token).json(token);
-            } else{
-                return res.json("Invalid Email or password..");
-            }
-        }else return res.json("Invalid Email or password..")               
-    });
-};
-*/
+/*CREATE TABLE favorite (
+    id int  AUTO_INCREMENT NOT NULL,
+    userId int,
+    articleId int,
+    is_deleted TINYINT DEFAULT 0,
+	PRIMARY KEY (id),
+	FOREIGN KEY (userId) REFERENCES users(id),
+	FOREIGN KEY (articleId) REFERENCES articles(id)
+); */
