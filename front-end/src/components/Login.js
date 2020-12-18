@@ -27,7 +27,7 @@ export default function Login(props) {
 		}
 		axios.post('http://localhost:5000/login', { userName, Password }).then((data) => {
 			console.log('object :>>', data.data);
-			if (data.data !== 'Wrong userName or password') {
+			if (data.data != 'Wrong userName or password') {
 				history.push('/articles');
 			} else {
 				setError('Wrong userName Or Password !');
@@ -37,11 +37,11 @@ export default function Login(props) {
 	return (
 		<div className="container">
 			<div className="row">
-				<h4>Login</h4>
+				<h4 className="text-primary">Login</h4>
 			</div>
 			<div className="row">
 				<div className="col-md-6">
-					<label htmlFor="userName">username</label>
+					<label htmlFor="userName" className="text-info">username :</label>
 					<input
 						id="I1"
 						type="text"
@@ -54,8 +54,8 @@ export default function Login(props) {
 			</div>
 			<div className="row">
 				<div className="col-md-6">
-					<label id="I2" htmlFor="password">
-						password
+					<label id="I2" htmlFor="password" className="text-info">
+						password :
 					</label>
 					<input
 						type="password"

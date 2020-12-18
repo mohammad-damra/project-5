@@ -44,7 +44,7 @@ export default function SignUp(props) {
 			</div>
 			<div className="row">
 				<div className="col-md-6">
-					<label htmlFor="userName">username</label>
+					<label htmlFor="userName" className="text-info">username :</label>
 					<input
 						id="I1"
 						type="text"
@@ -57,8 +57,8 @@ export default function SignUp(props) {
 			</div>
 			<div className="row">
 				<div className="col-md-6">
-					<label id="I2" htmlFor="password">
-						password
+					<label id="I2" htmlFor="password" className="text-info">
+						password :
 					</label>
 					<input
 						type="password"
@@ -71,8 +71,8 @@ export default function SignUp(props) {
 			</div>
 			<div className="row">
 				<div className="col-md-6">
-					<label id="I2" htmlFor="email">
-						Email
+					<label id="I2" htmlFor="email" className="text-info">
+						Email :
 					</label>
 					<input
 						type="email"
@@ -89,7 +89,7 @@ export default function SignUp(props) {
 						id="B1"
 						style={{ width: '100%' }}
 						type="button"
-						className="btn btn-success"
+						className="btn btn-outline-success"
 						onClick={submit}
 					>
 						SignUp
@@ -102,7 +102,7 @@ export default function SignUp(props) {
 						id="B2"
 						style={{ width: '100%' }}
 						type="button"
-						className="btn btn-danger"
+						className="btn btn-outline-danger"
 						onClick={clearForm}
 					>
 						Clear <ArchiveIcon size={16} />{' '}
