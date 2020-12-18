@@ -135,12 +135,12 @@ const deleteArticleByAuthor = (req, res) => {
 	// });
 };
 const logIn = (req, res) => {
-	const { userName } = req.body;
+	const { userName,Password } = req.body;
 	const query = `SELECT * FROM users WHERE name ='${userName}'`;
 	connection.query(query, async (err, result) => {
 		if (err) throw err;
 		if (result.length) {
-			password = await bcrypt.compare(req.body.password, result[0].password);
+			password = await bcrypt.compare(Password, result[0].password);
 			if (password) {
 				return res.json('login successfully');
 			} else return res.json('Wrong userName or password');
@@ -171,7 +171,7 @@ const signUp = async (req, res) => {
 	});
 };
 const getWeather = (req, res) => {
-	const weather = 'http://api.openweathermap.org/data/2.5/weather?q=Amman&appid=e668b42ebae93ce84aa0c626e07960d2';
+	const weather = 'http://api.openweathermap.org/data/2.5/weather?q=Amman&appid=' + process.env.weather;
 	request(weather, (error, response, body) => {
 		res.send(body);
 	});

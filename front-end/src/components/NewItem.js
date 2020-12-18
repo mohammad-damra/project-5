@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ArticleItem from './ArticleItem';
+import {BrowserRouter as Link} from 'react-router-dom'
 
 export default function NewItem(props) {
 	const [ title, setTitle ] = useState('');
 	const [ desc, setDesc ] = useState('');
 	const [ author, setAuthor ] = useState('');
 	const [ weather, setWeather ] = useState('');
+	const [ articles, setArticles ] = useState([]);
 	useEffect(() => {
 		getWeather();
+		getAllArticles();
 	}, []);
 	const getWeather = () => {
 		axios
@@ -31,16 +35,29 @@ export default function NewItem(props) {
 				console.log('RESPONSE: ', response);
 				console.log('DATA: ', response.data);
 				if (response.status === 200) {
-					props.getArticles();
+					getAllArticles();
 				}
 			})
 			.catch((err) => {
 				console.log('ERR: ', err);
 			});
 	};
-
+	const getAllArticles = () => {
+		axios
+			.get(`http://localhost:5000/articles`)
+			.then((response) => {
+				setArticles(response.data);
+			})
+			.catch((err) => {
+				console.log('ERR: ', err);
+			});
+	};
+	const renderArticles = articles.map((articleObj) => {
+		return <ArticleItem article={articleObj} getArticles={getAllArticles} />;
+	});
 	return (
 		<div className="new-item">
+			<h1>WELCOME</h1>
 			<div>{weather && weather.name}</div>
 			<input
 				onChange={(e) => {
@@ -68,6 +85,9 @@ export default function NewItem(props) {
 			/>
 			<br />
 			<button onClick={addNewArticle}>Add New Article</button>
+			<button onClick={getAllArticles}>GET ARTICLES</button>
+			{renderArticles}
 		</div>
 	);
 }
+
